@@ -49,3 +49,4 @@ build/windows/WinAVR-*.zip
 hardware/arduino/avr/libraries/Bridge/examples/XivelyClient/passwords.h
 avr-toolchain-*.zip
 hardware/arduino/sam/system/CMSIS/
+backups/

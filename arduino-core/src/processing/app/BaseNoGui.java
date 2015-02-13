@@ -40,6 +40,7 @@ public class BaseNoGui {
   public static final int REVISION = 10600;
   /** Extended version string displayed on GUI */
   static String VERSION_NAME = "1.6.0";
+  static String teensyduino_version = null;
 
   static File buildFolder;
 
@@ -162,6 +163,25 @@ public class BaseNoGui {
       }
     }
     return prefs;
+  }
+
+  static public boolean isTeensyduino() {
+    TargetPlatform targetPlatform = getTargetPlatform();
+    if (targetPlatform == null) return false;
+    TargetPackage targetPackage = targetPlatform.getContainerPackage();
+    if (targetPackage == null) return false;
+    String s = targetPackage.getId();
+    if (s == null) return false;
+    if (!s.equalsIgnoreCase("teensy")) return false;
+    TargetBoard board = getTargetBoard();
+    if (board == null) return false;
+    s = board.getId();
+    if (s == null) return false;
+    if (!s.startsWith("teensy")) return false;
+    s = board.getName();
+    if (s == null) return false;
+    if (!s.startsWith("Teensy")) return false;
+    return true;
   }
 
   static public File getContentFile(String name) {
@@ -577,6 +597,15 @@ public class BaseNoGui {
     packages = new HashMap<String, TargetPackage>();
     loadHardware(getHardwareFolder());
     loadHardware(getSketchbookHardwareFolder());
+    TargetPackage t = packages.get("teensy");
+    if (t != null) {
+      Map<String, TargetPackage> list = new LinkedHashMap<String, TargetPackage>();
+      list.put(t.getId(), t);
+      for (TargetPackage p : packages.values()) {
+        if (p != t) list.put(p.getId(), p);
+      }
+      packages = list;
+    }
     if (packages.size() == 0) {
       System.out.println(_("No valid configured cores found! Exiting..."));
       System.exit(3);
@@ -612,6 +641,14 @@ public class BaseNoGui {
     // help 3rd party installers find the correct hardware path
     PreferencesData.set("last.ide." + VERSION_NAME + ".hardwarepath", getHardwarePath());
     PreferencesData.set("last.ide." + VERSION_NAME + ".daterun", "" + (new Date()).getTime() / 1000);
+    try {
+      File versionFile = getContentFile("lib/teensyduino.txt");
+      if (versionFile.exists()) {
+        teensyduino_version = PApplet.loadStrings(versionFile)[0];
+      }
+    } catch (Exception e) {
+      teensyduino_version = null;
+    }
   }
 
   /**
@@ -680,7 +717,7 @@ public class BaseNoGui {
     TargetPlatform targetPlatform = getTargetPlatform();
     if (targetPlatform != null) {
       String core = getBoardPreferences().get("build.core");
-      if (core.contains(":")) {
+      if (core != null && core.contains(":")) {  // workaround Arduino issue #2635
         String referencedCore = core.split(":")[0];
         TargetPlatform referencedPlatform = getTargetPlatform(referencedCore, targetPlatform.getId());
         if (referencedPlatform != null) {
@@ -717,8 +754,24 @@ public class BaseNoGui {
             // If a library was already found with this header, keep
             // it if the library's name matches the header name.
             String name = header.substring(0, header.length() - 2);
-            if (old.getFolder().getPath().endsWith(name))
-              continue;
+            String oldName = old.getFolder().getName();
+            String libName = lib.getFolder().getName();
+            //System.out.println("name conflict: " + name);
+            //System.out.println("  old = " + oldName + "  ->  " + old.getFolder().getPath());
+            //System.out.println("  new = " + libName + "  ->  " + lib.getFolder().getPath());
+            if (libName.equals(name)) {
+            } else if (oldName.equals(name)) {
+		continue;
+            } else if (libName.equalsIgnoreCase(name)) {
+            } else if (oldName.equalsIgnoreCase(name)) {
+		continue;
+            } else if (libName.startsWith(name)) {
+            } else if (oldName.startsWith(name)) {
+		continue;
+            } else if (libName.endsWith(name)) {
+            } else if (oldName.endsWith(name)) {
+		continue;
+            }
           }
           importToLibraryTable.put(header, lib);
         }

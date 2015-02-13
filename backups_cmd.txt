@@ -1,0 +1,2 @@
+tar -cvzf backups/01.tar.gz app/src arduino-core/src
+

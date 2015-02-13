@@ -117,6 +117,8 @@ public class Serial implements SerialPortEventListener {
     if (istopbits == 1.5f) stopbits = SerialPort.STOPBITS_1_5;
     if (istopbits == 2) stopbits = SerialPort.STOPBITS_2;
 
+    if (iname == "fake serial") return;
+
     try {
       port = new SerialPort(iname);
       port.openPort();
@@ -226,6 +228,14 @@ public class Serial implements SerialPortEventListener {
       port.setRTS(state);
     } catch (SerialPortException e) {
       errorMessage("setRTS", e);
+    }
+  }
+
+  public void setBaud(int rate) {
+    if (port == null) return;
+    try {
+      port.setParams(rate, 8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+    } catch (SerialPortException e) {
     }
   }
 

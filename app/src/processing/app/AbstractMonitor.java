@@ -225,6 +225,16 @@ public abstract class AbstractMonitor extends JFrame implements ActionListener {
   }
 
   public abstract void open() throws Exception;
+  public abstract void reopen();
+  public void enableWindow(boolean enable) {
+    textArea.setEnabled(enable);
+    scrollPane.setEnabled(enable);
+    textField.setEnabled(enable);
+    sendButton.setEnabled(enable);
+    autoscrollBox.setEnabled(enable);
+    lineEndings.setEnabled(enable);
+    serialRates.setEnabled(enable);
+  }
 
   public abstract void close() throws Exception;
   
