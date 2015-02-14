@@ -34,7 +34,7 @@ import static processing.app.I18n._;
 @SuppressWarnings("serial")
 public class SerialMonitor extends AbstractMonitor {
 
-  private Thread reopener;
+  //private Thread reopener;
   private final String port;
   private Serial serial;
   private int serialRate;
@@ -112,6 +112,7 @@ public class SerialMonitor extends AbstractMonitor {
           };
           serial.setBaud(serialRate);
           textArea.setText("");
+          isOpen = true;
           enableWindow(true);
           return;
         } else {
@@ -130,6 +131,7 @@ public class SerialMonitor extends AbstractMonitor {
           }
         };
         textArea.setText("");
+        isOpen = true;
         enableWindow(true);
         return;
       }
@@ -141,6 +143,7 @@ public class SerialMonitor extends AbstractMonitor {
       }
     };
     textArea.setText("");
+    isOpen = true;
     enableWindow(true);
   }
 
@@ -153,48 +156,9 @@ public class SerialMonitor extends AbstractMonitor {
       serial.dispose();
       serial = null;
     }
+    isOpen = false;
     enableWindow(false);
   }
-
-  public void reopen() {
-    //System.out.println("reopen");
-    if (!isVisible()) return;
-    if (serial != null) return;
-    if (reopener != null && reopener.isAlive()) return;
-
-    reopener = new Thread() {
-      public void run() {
-        int attempt = 0;
-        while (attempt++ < 30) {  // keep trying for approx 10 seconds
-          try {
-            sleep(330);
-          } catch (InterruptedException e) {
-            return;
-          }
-          try {
-            open();
-            if (serial != null) return;
-          } catch (Exception e) {
-          }
-        }
-      }
-    };
-    reopener.start();
-  }
-
-  private void reopen_abort() {
-    if (reopener == null) return;
-    reopener.interrupt();
-    int attempt = 0;
-    while (attempt++ < 25) {  // keep trying for approx 1/4 second
-      if (!reopener.isAlive()) break;
-      try {
-        Thread.sleep(10);
-      } catch (InterruptedException e) {
-      }
-    }
-  }
-  
 }
 
 

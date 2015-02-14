@@ -44,6 +44,8 @@ public abstract class AbstractMonitor extends JFrame implements ActionListener {
   protected JCheckBox autoscrollBox;
   protected JComboBox lineEndings;
   protected JComboBox serialRates;
+  protected Thread reopener;
+  protected Boolean isOpen;
 
   private Timer updateTimer;
   private StringBuffer updateBuffer;
@@ -225,7 +227,47 @@ public abstract class AbstractMonitor extends JFrame implements ActionListener {
   }
 
   public abstract void open() throws Exception;
-  public abstract void reopen();
+  //public abstract void reopen();
+  public void reopen() {
+    //System.out.println("reopen");
+    if (!isVisible()) return;
+    if (isOpen) return;
+    if (reopener != null && reopener.isAlive()) return;
+
+    reopener = new Thread() {
+      public void run() {
+        int attempt = 0;
+        while (attempt++ < 30) {  // keep trying for approx 10 seconds
+          try {
+            sleep(330);
+          } catch (InterruptedException e) {
+            return;
+          }
+          try {
+            open();
+            isOpen = true;
+            return;
+          } catch (Exception e) {
+          }
+        }
+      }
+    };
+    reopener.start();
+  }
+
+  protected void reopen_abort() {
+    if (reopener == null) return;
+    reopener.interrupt();
+    int attempt = 0;
+    while (attempt++ < 25) {  // keep trying for approx 1/4 second
+      if (!reopener.isAlive()) break;
+      try {
+        Thread.sleep(10);
+      } catch (InterruptedException e) {
+      }
+    }
+  }
+
   public void enableWindow(boolean enable) {
     textArea.setEnabled(enable);
     scrollPane.setEnabled(enable);
