@@ -238,6 +238,18 @@ public class Serial implements SerialPortEventListener {
     } catch (SerialPortException e) {
     }
   }
+  public boolean isOnline() {
+    if (port == null) return false;
+    if (!(port.isOpened())) return false;
+    boolean online;
+    try {
+      online = port.setDTR(true);
+    } catch (Exception e) {
+      online = false;
+    }
+    //System.out.println("set dtr, result = " + online);
+    return online;
+  }
 
   static public List<String> list() {
     return Arrays.asList(SerialPortList.getPortNames());

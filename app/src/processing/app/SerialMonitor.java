@@ -34,7 +34,7 @@ import static processing.app.I18n._;
 @SuppressWarnings("serial")
 public class SerialMonitor extends AbstractMonitor {
 
-  //private Thread reopener;
+  private Thread onlineChecker;
   private final String port;
   private Serial serial;
   private int serialRate;
@@ -96,6 +96,9 @@ public class SerialMonitor extends AbstractMonitor {
   public void open() throws Exception {
     if (Thread.currentThread() != reopener) reopen_abort();
     if (serial != null) return;
+    if (onlineChecker != null) {
+      onlineChecker.interrupt();
+    }
 
     if (BaseNoGui.isTeensyduino()) {
       // Only do this special open stuff if we're absolutely
@@ -145,6 +148,30 @@ public class SerialMonitor extends AbstractMonitor {
     textArea.setText("");
     isOpen = true;
     enableWindow(true);
+    if (BaseNoGui.isTeensyduino()) {
+      onlineChecker = new Thread() {
+        public void run() {
+          while (true) {
+            try {
+              sleep(400);
+            } catch (InterruptedException e) {
+              return;
+            }
+            if (serial == null) return;
+            if (!(serial.isOnline())) {
+              //System.out.println("Serial went offline");
+              try {
+                close();
+                reopen();
+              } catch (Exception e) {
+              }
+              return;
+            }
+          }
+        }
+      };
+      onlineChecker.start();
+    }
   }
 
   public void close() throws Exception {
@@ -304,6 +331,9 @@ class FakeSerial extends Serial {
 	public void setDTR(boolean state) {
 	}
 	public void setRTS(boolean state) {
+	}
+	public boolean isOnline() {
+		return true;
 	}
 	static public ArrayList<String> list() {
 		return new ArrayList<String>();
