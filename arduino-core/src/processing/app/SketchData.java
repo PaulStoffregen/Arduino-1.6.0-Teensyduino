@@ -174,7 +174,7 @@ public class SketchData {
    * Returns a String[] array of proper extensions.
    */
   public List<String> getExtensions() {
-    return Arrays.asList("ino", "pde", "c", "cpp", "h");
+    return Arrays.asList("ino", "pde", "c", "cpp", "h", "s");
   }
 
   /**

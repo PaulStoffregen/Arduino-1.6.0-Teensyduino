@@ -269,7 +269,7 @@ public class Compiler implements MessageConsumer {
       if (tempBuildFolder.exists()) {
         String files[] = tempBuildFolder.list();
         for (String file : files) {
-          if (file.endsWith(".c") || file.endsWith(".cpp") || file.endsWith(".s")) {
+          if (file.endsWith(".c") || file.endsWith(".cpp") || file.endsWith(".S")) {
             File deleteMe = new File(tempBuildFolder, file);
             if (!deleteMe.delete()) {
               System.err.println("Could not delete " + deleteMe);
@@ -527,7 +527,10 @@ public class Compiler implements MessageConsumer {
 
     for (File file : sSources) {
       File objectFile = new File(outputPath, file.getName() + ".o");
+      File dependFile = new File(outputPath, file.getName() + ".d");
       objectPaths.add(objectFile);
+      if (isAlreadyCompiled(file, objectFile, dependFile, prefs))
+        continue;
       String[] cmd = getCommandCompilerByRecipe(includeFolders, file, objectFile, "recipe.S.o.pattern");
       execAsynchronously(cmd);
     }
@@ -1209,13 +1212,17 @@ public class Compiler implements MessageConsumer {
     // 3. then loop over the code[] and save each .java file
 
     for (SketchCode sc : sketch.getCodes()) {
-      if (sc.isExtension("c") || sc.isExtension("cpp") || sc.isExtension("h")) {
+      if (sc.isExtension("c") || sc.isExtension("cpp") || sc.isExtension("h") || sc.isExtension("s")) {
         // no pre-processing services necessary for java files
         // just write the the contents of 'program' to a .java file
         // into the build directory. uses byte stream and reader/writer
         // shtuff so that unicode bunk is properly handled
         String filename = sc.getFileName(); //code[i].name + ".java";
         try {
+          if (filename.endsWith(".s")) {
+            // assembly files must be named with capital ".S"
+            filename = filename.substring(0, filename.length()-1) + "S";
+          }
           BaseNoGui.saveFile(sc.getProgram(), new File(buildPath, filename));
         } catch (IOException e) {
           e.printStackTrace();
