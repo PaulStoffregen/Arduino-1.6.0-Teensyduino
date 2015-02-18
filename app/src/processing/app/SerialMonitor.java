@@ -119,9 +119,10 @@ public class SerialMonitor extends AbstractMonitor {
           enableWindow(true);
           return;
         } else {
-          String path = BaseNoGui.getHardwarePath() + "/tools/";
+          String cmdline = BaseNoGui.getHardwarePath() + File.separator
+	  + "tools" + File.separator + "teensy_restart";
           try {
-            Runtime.getRuntime().exec(path + "teensy_restart");
+            Runtime.getRuntime().exec(new String[] {cmdline});
           } catch (Exception e) {
           }
         }
@@ -295,17 +296,18 @@ class FakeSerial extends Serial {
 		}
 	}
 	private boolean gateway_start(String cmd) {
-		String path = Base.getHardwarePath() + "/tools/";
+		String cmdline = BaseNoGui.getHardwarePath() + File.separator
+			+ "tools" + File.separator + cmd;
 		try {
-			gateway = Runtime.getRuntime().exec(path + cmd);
-		       if (!gateway_shutdown_scheduled) {
-			       Runtime.getRuntime().addShutdownHook(new Thread() {
-				       public void run() {
-					       FakeSerial.dispose_gateway();
-				       }
-			       });
-			       gateway_shutdown_scheduled = true;
-		       }
+			gateway = Runtime.getRuntime().exec(new String[] {cmdline});
+			if (!gateway_shutdown_scheduled) {
+				Runtime.getRuntime().addShutdownHook(new Thread() {
+					public void run() {
+						FakeSerial.dispose_gateway();
+					}
+				});
+				gateway_shutdown_scheduled = true;
+			}
 		} catch (Exception e) {
 		       gateway = null;
 			return false;
