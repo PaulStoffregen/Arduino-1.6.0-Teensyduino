@@ -796,7 +796,13 @@ public class Compiler implements MessageConsumer {
       
       // Teensyduino specific error messages
       if (BaseNoGui.isTeensyduino()) {
-	pieces = PApplet.match(s, "^(\\w+\\.\\w+):(\\d+):\\d+:\\s*error:\\s*(.+)\\s*");
+        if (verbose) {
+          String buildPath = prefs.get("build.path");
+          while ((i = s.indexOf(buildPath + File.separator)) != -1) {
+            s = s.substring(0, i) + s.substring(i + (buildPath + File.separator).length());
+          }
+        }
+        pieces = PApplet.match(s, "^(\\w+\\.\\w+):(\\d+):\\d+:\\s*error:\\s*(.+)\\s*");
         String m = pieces[3].trim();
 	String err = null;
 	if (m.equals("'Keyboard' was not declared in this scope")) {
