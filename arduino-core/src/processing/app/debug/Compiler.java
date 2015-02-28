@@ -356,10 +356,10 @@ public class Compiler implements MessageConsumer {
     if (prefs.getFile("build.variant.path") != null)
       includeFolders.add(prefs.getFile("build.variant.path"));
     for (Library lib : importedLibraries) {
-      if (verbose)
+      if (verbose || lib.getShowPathname())
         System.out.println(I18n
             .format(_("Using library {0} in folder: {1} {2}"), lib.getName(),
-                    lib.getFolder(), lib.isLegacy() ? "(legacy)" : ""));
+                    lib.getFolder(), lib.isLegacy() ? "(1.0.x format)" : ""));
       includeFolders.add(lib.getSrcFolder());
     }
     if (verbose)

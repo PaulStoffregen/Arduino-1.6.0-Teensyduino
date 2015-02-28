@@ -24,6 +24,7 @@ public class Library {
   private List<String> architectures;
   private File folder;
   private boolean isLegacy;
+  private boolean showPathname;
 
   private enum LibraryLayout { FLAT, RECURSIVE };
   private LibraryLayout layout;
@@ -260,6 +261,14 @@ public class Library {
 
   public boolean isLegacy() {
     return isLegacy;
+  }
+
+  public boolean getShowPathname() {
+    return showPathname;
+  }
+
+  public void setShowPathname() {
+    showPathname = true;
   }
 
   @Override

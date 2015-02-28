@@ -755,6 +755,11 @@ public class BaseNoGui {
             // with the same name.  We must decide which library to
             // use when a sketch has #include "name.h"
             //
+            // First, make sure the user sees the pathname, even if
+            // not using verbose mode
+            lib.setShowPathname();
+            old.setShowPathname();
+            //
             // When all other factors are equal, "libName" is
             // used in preference to "oldName", because getLibraries()
             // gives the library list in order from less specific to
