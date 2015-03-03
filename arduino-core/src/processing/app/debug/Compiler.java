@@ -802,7 +802,7 @@ public class Compiler implements MessageConsumer {
             s = s.substring(0, i) + s.substring(i + (buildPath + File.separator).length());
           }
         }
-        pieces = PApplet.match(s, "^(\\w+\\.\\w+):(\\d+):\\d+:\\s*error:\\s*(.+)\\s*");
+        pieces = PApplet.match(s, "(\\w+\\.\\w+):(\\d+):\\d+:\\s*error:\\s*(.+)\\s*");
         String m = pieces[3].trim();
 	String err = null;
 	if (m.equals("'Keyboard' was not declared in this scope")) {
