@@ -802,7 +802,7 @@ msgstr "FAQ.html"
 #: ../../../processing/app/Base.java:416
 #, java-format
 msgid "Failed to open sketch: \"{0}\""
-msgstr "Program açılamadı : \"{0}\""
+msgstr "Taslak açılamadı : \"{0}\""
 
 #: Editor.java:491
 msgid "File"
@@ -1122,7 +1122,7 @@ msgstr "\"{0}\" için kaynak bulunmuyor"
 #: ../../../processing/app/BaseNoGui.java:504
 #: ../../../processing/app/BaseNoGui.java:549
 msgid "No sketch"
-msgstr ""
+msgstr "Taslak yok"
 
 #: ../../../processing/app/BaseNoGui.java:428
 msgid "No sketchbook"
@@ -1170,7 +1170,7 @@ msgstr "Sketch'e bir dosya eklendi."
 
 #: ../../../processing/app/BaseNoGui.java:455
 msgid "Only --verify, --upload or --get-pref are supported"
-msgstr ""
+msgstr "Yalnızca --verify, --upload veya --get-pref seçenekleri desteklenmektedir"
 
 #: EditorToolbar.java:41
 msgid "Open"
@@ -1227,7 +1227,7 @@ msgstr "Lütfen JDK'nın 1.5 veya daha yeni bir sürümünü kurun"
 #: ../../../cc/arduino/packages/uploaders/SerialUploader.java:217
 #: ../../../cc/arduino/packages/uploaders/SerialUploader.java:262
 msgid "Please select a programmer from Tools->Programmer menu"
-msgstr ""
+msgstr "Lütfen Araçlar -> Programlayıcı menüsünden bir programlayıcı seçin"
 
 #: Preferences.java:110
 msgid "Polish"
@@ -1720,7 +1720,7 @@ msgstr "Seri veri monitörü açılamıyor"
 #: Sketch.java:1432
 #, java-format
 msgid "Uncaught exception type: {0}"
-msgstr "Yakalanamayın hata türü: {0}"
+msgstr "Beklenmedik hata türü: {0}"
 
 #: Editor.java:1133 Editor.java:1355
 msgid "Undo"
@@ -1869,7 +1869,7 @@ msgstr "Taslak defterinizi unuttunuz"
 #: ../../../processing/app/AbstractMonitor.java:92
 msgid ""
 "You've pressed {0} but nothing was sent. Should you select a line ending?"
-msgstr "{0} e bastınız ama hiçbirşey gönderilmedi. Satır sonu karakteri eklemeniz gerekiyor olabilir."
+msgstr "{0} e bastınız ama hiçbir şey gönderilmedi. Satır sonu karakteri seçmeniz gerekiyor olabilir."
 
 #: Base.java:536
 msgid ""
@@ -1897,7 +1897,11 @@ msgid ""
 "older version of Arduino,you may need to use Tools -> Fix Encoding & Reload "
 "to updatethe sketch to use UTF-8 encoding. If not, you may need todelete the"
 " bad characters to get rid of this warning."
-msgstr ""
+msgstr "\"{0}\" anlaşılamayan karakterler içeriyor. Bu kod Arduino'nun "
+"eski bir sürümü ile oluşturulduysa, UTF-8 kodlamasını kullanmak için "
+"Araçlar -> Karakter kodlamasını düzelt & Tekrar yükle seçeneğini "
+"kullanmanız gerekebilir. Eğer Arduino'nun eski bir sürümü ile "
+"oluşturulmadıysa, anlaşılamayan karakterleri silmeniz gerekebilir."
 
 #: debug/Compiler.java:409
 msgid ""
